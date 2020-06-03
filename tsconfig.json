@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"lib": ["es2015", "dom"],
+		"module": "CommonJS",
+		"strict": true,
+		"declaration": true,
+		"outDir": "dist",
+		"sourceMap": true,
+		"experimentalDecorators": true,
+		"esModuleInterop": true
+	},
+	"include": ["src/*"],
+	"exclude": ["node_modules", "**/*.spec.ts", "dist"]
+}
