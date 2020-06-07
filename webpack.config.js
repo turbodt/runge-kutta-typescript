@@ -17,7 +17,7 @@ module.exports = {
 	output: {
 		filename: "bundle.js",
 		libraryTarget: "umd",
-		library: "MyLib",
+		library: "RungeKutta",
 		umdNamedDefine: true,
 		path: path.resolve(__dirname, "dist")
 	}

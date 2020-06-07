@@ -9,7 +9,18 @@ const getNewT = <K extends _T>(x: K, ...args: any[]): K => {
 		const newArgs = args as [any?, any?, any?];
 		return new Float64Array(...newArgs) as K;
 	} else if (x instanceof Array) {
-		return new Array<number>(...args) as K;
+		return new Array(...args) as K;
+	}
+	return new Array() as K;
+};
+
+const getNewCopyOfT = <K extends _T>(x: K): K => {
+	if (x instanceof Float32Array) {
+		return getNewT(x, x);
+	} else if (x instanceof Float64Array) {
+		return getNewT(x, x);
+	} else if (x instanceof Array) {
+		return x.slice() as K;
 	}
 	return new Array() as K;
 };
@@ -24,7 +35,7 @@ export default class RungeKutta<T extends _T> {
 	}
 
 	public k(i: number, h: number, t: number, x: T, k: T[]): T {
-		const xk = getNewT(x, x);
+		const xk = getNewCopyOfT(x);
 		for (let j = 0; j < i; j++) {
 			for (let l = 0; l < xk.length; l++) {
 				xk[l] += h * this.butcherTableaux.a[i][j] * k[j][l];
@@ -69,7 +80,7 @@ export default class RungeKutta<T extends _T> {
 	}
 
 	public steps(n: number, h: number, t: number, x: T): T {
-		const xNew = getNewT(x, x);
+		const xNew = getNewCopyOfT(x);
 		this.stepsInto(n, h, t, xNew, xNew);
 		return xNew;
 	}

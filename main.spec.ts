@@ -1,4 +1,4 @@
-import { rk4ButcherTableaux, RungeKutta } from "./index";
+import { rk4ButcherTableaux, RungeKutta } from "./src/index";
 
 test("Basic ODE with number[]", () => {
 	const f = (t: number, x: [number, number]): [number, number] => {
@@ -16,7 +16,6 @@ test("Basic ODE with number[]", () => {
 	x[1] = 0;
 	for (let i = 0; i < 50; i++) {
 		rk4.stepsInto(10, 0.01, 0, x, x);
-		console.log(x);
 		expect(r2(x)).toBeCloseTo(1, 5);
 	}
 });
