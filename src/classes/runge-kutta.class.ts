@@ -1,4 +1,4 @@
-import ButcherTableaux from "./butcher-tableaux.class";
+import ButcherTableau from "./butcher-tableaux.class";
 
 type _T = Float32Array | Float64Array | number[];
 const getNewT = <K extends _T>(x: K, ...args: any[]): K => {
@@ -28,20 +28,20 @@ const getNewCopyOfT = <K extends _T>(x: K): K => {
 type F<T> = (t: number, x: T) => T;
 
 export default class RungeKutta<T extends _T> {
-	constructor(private butcherTableaux: ButcherTableaux, public f: F<T>) {}
+	constructor(private butcherTableau: ButcherTableau, public f: F<T>) {}
 
 	get order(): number {
-		return this.butcherTableaux.order;
+		return this.butcherTableau.order;
 	}
 
 	public k(i: number, h: number, t: number, x: T, k: T[]): T {
 		const xk = getNewCopyOfT(x);
 		for (let j = 0; j < i; j++) {
 			for (let l = 0; l < xk.length; l++) {
-				xk[l] += h * this.butcherTableaux.a[i][j] * k[j][l];
+				xk[l] += h * this.butcherTableau.a[i][j] * k[j][l];
 			}
 		}
-		return this.f(t + h * this.butcherTableaux.c[i], xk);
+		return this.f(t + h * this.butcherTableau.c[i], xk);
 	}
 
 	public stepInto(h: number, t: number, x: T, xNew: T): RungeKutta<T> {
@@ -51,7 +51,7 @@ export default class RungeKutta<T extends _T> {
 		}
 		for (let j = 0; j < this.order; j++) {
 			for (let l = 0; l < x.length; l++) {
-				xNew[l] = h * this.butcherTableaux.b[j] * k[j][l] + x[l];
+				xNew[l] = h * this.butcherTableau.b[j] * k[j][l] + x[l];
 			}
 		}
 		return this;

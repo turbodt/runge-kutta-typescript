@@ -1,7 +1,7 @@
 type T = Float32Array | Float64Array;
 type TT = Float32ArrayConstructor | Float64ArrayConstructor;
 
-export default class ButcherTableaux {
+export default class ButcherTableau {
 	private data: T;
 
 	constructor(public readonly order: number, Type: TT = Float32Array) {
@@ -41,7 +41,7 @@ export default class ButcherTableaux {
 		return s;
 	}
 
-	public makeItConsistent(): ButcherTableaux {
+	public makeItConsistent(): ButcherTableau {
 		this.a.forEach((row, i) => {
 			this.c[i] = 0;
 			for (let j = 0; j < this.order; j++) {
@@ -52,13 +52,13 @@ export default class ButcherTableaux {
 	}
 }
 
-export const rk4ButcherTableaux = new ButcherTableaux(4);
-rk4ButcherTableaux.a[1][0] = 0.5;
-rk4ButcherTableaux.a[2][1] = 0.5;
-rk4ButcherTableaux.a[3][2] = 1.0;
-rk4ButcherTableaux.makeItConsistent();
+export const rk4ButcherTableau = new ButcherTableau(4);
+rk4ButcherTableau.a[1][0] = 0.5;
+rk4ButcherTableau.a[2][1] = 0.5;
+rk4ButcherTableau.a[3][2] = 1.0;
+rk4ButcherTableau.makeItConsistent();
 
-rk4ButcherTableaux.b[0] = 0.3333333333333333;
-rk4ButcherTableaux.b[1] = 0.1666666666666666;
-rk4ButcherTableaux.b[2] = 0.1666666666666666;
-rk4ButcherTableaux.b[3] = 0.3333333333333333;
+rk4ButcherTableau.b[0] = 0.3333333333333333;
+rk4ButcherTableau.b[1] = 0.1666666666666666;
+rk4ButcherTableau.b[2] = 0.1666666666666666;
+rk4ButcherTableau.b[3] = 0.3333333333333333;

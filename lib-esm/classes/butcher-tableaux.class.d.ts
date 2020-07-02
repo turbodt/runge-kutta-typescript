@@ -1,6 +1,6 @@
 declare type T = Float32Array | Float64Array;
 declare type TT = Float32ArrayConstructor | Float64ArrayConstructor;
-export default class ButcherTableaux {
+export default class ButcherTableau {
     readonly order: number;
     private data;
     constructor(order: number, Type?: TT);
@@ -8,7 +8,7 @@ export default class ButcherTableaux {
     get b(): T;
     get c(): T;
     toString(): string;
-    makeItConsistent(): ButcherTableaux;
+    makeItConsistent(): ButcherTableau;
 }
-export declare const rk4ButcherTableaux: ButcherTableaux;
+export declare const rk4ButcherTableau: ButcherTableau;
 export {};

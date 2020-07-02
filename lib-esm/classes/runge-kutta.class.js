@@ -23,26 +23,38 @@ var getNewT = function (x) {
     }
     return new Array();
 };
+var getNewCopyOfT = function (x) {
+    if (x instanceof Float32Array) {
+        return getNewT(x, x);
+    }
+    else if (x instanceof Float64Array) {
+        return getNewT(x, x);
+    }
+    else if (x instanceof Array) {
+        return x.slice();
+    }
+    return new Array();
+};
 var RungeKutta = /** @class */ (function () {
-    function RungeKutta(butcherTableaux, f) {
-        this.butcherTableaux = butcherTableaux;
+    function RungeKutta(butcherTableau, f) {
+        this.butcherTableau = butcherTableau;
         this.f = f;
     }
     Object.defineProperty(RungeKutta.prototype, "order", {
         get: function () {
-            return this.butcherTableaux.order;
+            return this.butcherTableau.order;
         },
         enumerable: false,
         configurable: true
     });
     RungeKutta.prototype.k = function (i, h, t, x, k) {
-        var xk = getNewT(x, x);
+        var xk = getNewCopyOfT(x);
         for (var j = 0; j < i; j++) {
             for (var l = 0; l < xk.length; l++) {
-                xk[l] += h * this.butcherTableaux.a[i][j] * k[j][l];
+                xk[l] += h * this.butcherTableau.a[i][j] * k[j][l];
             }
         }
-        return this.f(t + h * this.butcherTableaux.c[i], xk);
+        return this.f(t + h * this.butcherTableau.c[i], xk);
     };
     RungeKutta.prototype.stepInto = function (h, t, x, xNew) {
         var k = [];
@@ -51,7 +63,7 @@ var RungeKutta = /** @class */ (function () {
         }
         for (var j = 0; j < this.order; j++) {
             for (var l = 0; l < x.length; l++) {
-                xNew[l] = h * this.butcherTableaux.b[j] * k[j][l] + x[l];
+                xNew[l] = h * this.butcherTableau.b[j] * k[j][l] + x[l];
             }
         }
         return this;
@@ -71,7 +83,7 @@ var RungeKutta = /** @class */ (function () {
         return this;
     };
     RungeKutta.prototype.steps = function (n, h, t, x) {
-        var xNew = getNewT(x, x);
+        var xNew = getNewCopyOfT(x);
         this.stepsInto(n, h, t, xNew, xNew);
         return xNew;
     };
