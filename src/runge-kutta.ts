@@ -1,45 +1,24 @@
-import ButcherTableau from "./butcher-tableaux.class";
+import { DataArray, ODEFunction, Constructor } from "./types";
+import { ButcherTableau } from "./butcher-tableaux";
+import { getCopy } from "./utils";
 
 
-type _T = Float32Array | Float64Array | number[];
-const getNewT = <K extends _T>(x: K, ...args: any[]): K => {
-    if (x instanceof Float32Array) {
-        const newArgs = args as [any?, any?, any?];
-        return new Float32Array(...newArgs) as K;
-    } else if (x instanceof Float64Array) {
-        const newArgs = args as [any?, any?, any?];
-        return new Float64Array(...newArgs) as K;
-    } else if (x instanceof Array) {
-        return new Array(...args) as K;
-    }
-    return new Array() as K;
-};
-
-
-const getNewCopyOfT = <K extends _T>(x: K): K => {
-    if (x instanceof Float32Array) {
-        return getNewT(x, x);
-    } else if (x instanceof Float64Array) {
-        return getNewT(x, x);
-    } else if (x instanceof Array) {
-        return x.slice() as K;
-    }
-    return new Array() as K;
-};
-
-
-type F<T> = (t: number, x: T) => T;
-
-
-export default class RungeKutta<T extends _T> {
-    constructor(private butcherTableau: ButcherTableau, public f: F<T>) {}
+export class RungeKutta<T extends DataArray> {
+    constructor(
+        protected butcherTableau: ButcherTableau<T>,
+        public f: ODEFunction<T>
+    ) {}
 
     get order(): number {
         return this.butcherTableau.order;
     }
 
+    get Type(): Constructor<T> {
+        return this.butcherTableau.Type;
+    }
+
     public k(i: number, h: number, t: number, x: T, k: T[]): T {
-        const xk = getNewCopyOfT(x);
+        const xk = getCopy(x);
         for (let j = 0; j < i; j++) {
             for (let l = 0; l < xk.length; l++) {
                 xk[l] += h * this.butcherTableau.a[i][j] * k[j][l];
@@ -62,7 +41,7 @@ export default class RungeKutta<T extends _T> {
     }
 
     public step(h: number, t: number, x: T): T {
-        const xNew = getNewT(x, x.length);
+        const xNew = new this.Type(x.length);
         this.stepInto(h, t, x, xNew);
         return xNew;
     }
@@ -84,7 +63,7 @@ export default class RungeKutta<T extends _T> {
     }
 
     public steps(n: number, h: number, t: number, x: T): T {
-        const xNew = getNewCopyOfT(x);
+        const xNew = new this.Type(x.length);
         this.stepsInto(n, h, t, xNew, xNew);
         return xNew;
     }
