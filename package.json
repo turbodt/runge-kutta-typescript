@@ -1,30 +1,30 @@
 {
-	"name": "rk-integrator",
-	"version": "1.0.0",
-	"description": "Package containing explicit RK integrators.",
-	"main": "index.ts",
-	"scripts": {
-		"test": "jest",
-		"clean": "rm -rf lib-esm | :",
-		"build": "npm run clean && tsc && tsc -m es6 --outDir lib-esm && webpack"
-	},
-	"keywords": [
-		"Runge-Kutta",
-		"rk",
-		"integrator"
-	],
-	"author": "Daniel Torres",
-	"license": "ISC",
-	"devDependencies": {
-		"@babel/core": "^7.10.2",
-		"@babel/preset-env": "^7.10.2",
-		"@babel/preset-typescript": "^7.10.1",
-		"@babel/types": "^7.10.2",
-		"awesome-typescript-loader": "^5.2.1",
-		"ts-loader": "^7.0.5",
-		"typescript": "^3.9.5",
-		"webpack": "^4.43.0",
-		"webpack-cli": "^3.3.11"
-	},
-	"dependencies": {}
+    "name": "rk-integrator",
+    "version": "1.0.0",
+    "description": "Package containing explicit RK integrators.",
+    "main": "src/index.ts",
+    "scripts": {
+        "test": "jest",
+        "clean": "rm -rf lib-esm | :",
+        "build": "npm run clean && tsc && tsc -m es6 --outDir lib-esm && webpack"
+    },
+    "keywords": [
+        "Runge-Kutta",
+        "rk",
+        "integrator"
+    ],
+    "author": "Daniel Torres",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/core": "^7.10.2",
+        "@babel/preset-env": "^7.10.2",
+        "@babel/preset-typescript": "^7.10.1",
+        "@babel/types": "^7.10.2",
+        "awesome-typescript-loader": "^5.2.1",
+        "ts-loader": "^7.0.5",
+        "typescript": "^3.9.5",
+        "webpack": "^4.43.0",
+        "webpack-cli": "^3.3.11"
+    },
+    "dependencies": {}
 }
