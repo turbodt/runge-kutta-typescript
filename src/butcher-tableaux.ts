@@ -1,34 +1,29 @@
-import { DataArray, Constructor } from "./types";
-import { subarray, Subarray } from "./utils";
-
-
-export class ButcherTableau<T extends DataArray> {
-    public a: T[];
-    public b: T;
-    public c: T;
-    protected data: T;
-    protected subarray: Subarray<T>;
+export class ButcherTableau {
+    public a: Float64Array[];
+    public b: Float64Array;
+    public c: Float64Array;
+    protected data: Float64Array;
 
     constructor(
-        public readonly Type: Constructor<T>,
         public readonly order: number
     ) {
-        this.data = new this.Type(
+        this.data = new Float64Array(
             this.order * this.order + this.order + this.order
         );
-        this.subarray = subarray(this.data);
 
         this.a = [];
         for (let i = 0; i < this.order; i++) {
-            this.a.push(this.subarray(i * this.order, (i + 1) * this.order));
+            this.a.push(
+                this.data.subarray(i * this.order, (i + 1) * this.order)
+            );
         }
 
-        this.b = this.subarray(
+        this.b = this.data.subarray(
             this.order * this.order,
             this.order * (1 + this.order)
         )
 
-        this.c = this.subarray(
+        this.c = this.data.subarray(
             this.order * (1 + this.order),
             this.order * (2 + this.order)
         );
@@ -45,7 +40,7 @@ export class ButcherTableau<T extends DataArray> {
         return s;
     }
 
-    public makeItConsistent(): ButcherTableau<T> {
+    public makeItConsistent(): ButcherTableau {
         this.a.forEach((row, i) => {
             this.c[i] = 0;
             for (let j = 0; j < this.order; j++) {

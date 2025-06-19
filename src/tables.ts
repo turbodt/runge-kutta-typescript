@@ -1,7 +1,7 @@
 import { ButcherTableau } from "./butcher-tableaux";
 
 
-export const rkdp45ButcherTableau = new ButcherTableau(Float64Array, 7);
+export const rkdp45ButcherTableau = new ButcherTableau(7);
 rkdp45ButcherTableau.a[1][0] = 1/5;
 rkdp45ButcherTableau.a[2][0] = 3/40;
 rkdp45ButcherTableau.a[2][1] = 9/40;

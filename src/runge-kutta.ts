@@ -1,36 +1,26 @@
-import { DataArray, ODEFunction, Constructor } from "./types";
+import { ODEFunction } from "./types";
 import { ButcherTableau } from "./butcher-tableaux";
-import { getCopy } from "./utils";
 
 
-export class RungeKutta<T extends DataArray> {
+export class RungeKutta {
     constructor(
-        protected butcherTableau: ButcherTableau<T>,
-        public f: ODEFunction<T>
+        protected butcherTableau: ButcherTableau,
+        public f: ODEFunction
     ) {}
 
     get order(): number {
         return this.butcherTableau.order;
     }
 
-    get Type(): Constructor<T> {
-        return this.butcherTableau.Type;
-    }
-
-    public k(i: number, h: number, t: number, x: T, k: T[]): T {
-        const xk = getCopy(x);
-        for (let j = 0; j < i; j++) {
-            for (let l = 0; l < xk.length; l++) {
-                xk[l] += h * this.butcherTableau.a[i][j] * k[j][l];
-            }
-        }
-        return this.f(t + h * this.butcherTableau.c[i], xk);
-    }
-
-    public stepInto(h: number, t: number, x: T, xNew: T): RungeKutta<T> {
-        const k: T[] = [];
+    public stepInto(
+        h: number,
+        t: number,
+        x: Float64Array,
+        xNew: Float64Array
+    ): RungeKutta {
+        const k: Float64Array[] = new Array(this.order);
         for (let i = 0; i < this.order; i++) {
-            k.push(this.k(i, h, t, x, k));
+            k[i] = this.k(i, h, t, x, k);
         }
         for (let j = 0; j < this.order; j++) {
             for (let l = 0; l < x.length; l++) {
@@ -40,8 +30,8 @@ export class RungeKutta<T extends DataArray> {
         return this;
     }
 
-    public step(h: number, t: number, x: T): T {
-        const xNew = new this.Type(x.length);
+    public step(h: number, t: number, x: Float64Array): Float64Array {
+        const xNew = new Float64Array(x.length);
         this.stepInto(h, t, x, xNew);
         return xNew;
     }
@@ -50,11 +40,11 @@ export class RungeKutta<T extends DataArray> {
         n: number,
         h: number,
         t: number,
-        x: T,
-        xNew: T
-    ): RungeKutta<T> {
-        for (let l = 0; l < x.length; l++) {
-            xNew[l] = x[l];
+        x: Float64Array,
+        xNew: Float64Array
+    ): RungeKutta {
+        for (let i = 0; i < this.order; i++) {
+            xNew[i] = x[i];
         }
         for (let i = 0; i < n; i++) {
             this.stepInto(h, t, xNew, xNew);
@@ -62,9 +52,31 @@ export class RungeKutta<T extends DataArray> {
         return this;
     }
 
-    public steps(n: number, h: number, t: number, x: T): T {
-        const xNew = new this.Type(x.length);
-        this.stepsInto(n, h, t, xNew, xNew);
+    public steps(
+        n: number,
+        h: number,
+        t: number,
+        x: Float64Array
+    ): Float64Array {
+        const xNew = new Float64Array(x.length);
+        this.stepsInto(n, h, t, x, xNew);
         return xNew;
     }
+
+    private k(
+        i: number,
+        h: number,
+        t: number,
+        x: Float64Array,
+        k: Float64Array[]
+    ): Float64Array {
+        const xk = x.slice();
+        for (let j = 0; j < i; j++) {
+            for (let l = 0; l < x.length; l++) {
+                xk[l] += h * this.butcherTableau.a[i][j] * k[j][l];
+            }
+        }
+        return this.f(t + h * this.butcherTableau.c[i], xk);
+    }
+
 }
