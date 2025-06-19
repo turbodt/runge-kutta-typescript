@@ -1,2 +1,3 @@
-export { default as ButcherTableau, rk4ButcherTableau } from "./classes/butcher-tableaux.class";
-export { default as RungeKutta } from "./classes/runge-kutta.class";
+export { ButcherTableau, } from "./butcher-tableaux";
+export * from "./runge-kutta";
+export * from "./tables";
