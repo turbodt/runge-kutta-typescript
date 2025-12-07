@@ -26,11 +26,10 @@ export class RungeKutta {
         // This loop ordering allows xNew and x to reference the same array
         // without conflicts
         for (let l = 0; l < x.length; l++) {
-            xNew[l] = 0;
+            xNew[l] = x[l];
             for (let j = 0; j < this.order; j++) {
-                xNew[l] += this.butcherTableau.b[j] * this.k[j][l];
+                xNew[l] += h*this.butcherTableau.b[j] * this.k[j][l];
             }
-            xNew[l] = h*xNew[l] + x[l];
         }
         return this;
     }
