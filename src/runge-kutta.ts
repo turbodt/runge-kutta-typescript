@@ -72,11 +72,13 @@ export class RungeKutta {
     private updateK(h: number, t: number, x: Float64Array): void {
         const xk = new Float64Array(x.length);
         for (let i = 0; i < this.order; i++) {
-            for (let j = 0; j < i; j++) {
-                for (let l = 0; l < x.length; l++) {
-                    xk[l] = x[l]
-                        + h * this.butcherTableau.a[i][j] * this.k[j][l];
+            for (let l = 0; l < x.length; l++) {
+                xk[l] = 0;
+                for (let j = 0; j < i; j++) {
+                    xk[l] += this.butcherTableau.a[i][j] * this.k[j][l];
                 }
+                xk[l] *= h;
+                xk[l] += x[l];
             }
             this.k[i] = this.f(t + h * this.butcherTableau.c[i], xk);
         }
