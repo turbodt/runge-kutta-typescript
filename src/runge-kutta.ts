@@ -47,13 +47,13 @@ export class RungeKutta {
         x: Float64Array,
         xNew: Float64Array
     ): RungeKutta {
-        for (let i = 0; i < n; i++) {
-            this.stepInto(h, t, x, xNew);
+        for (let l = 0; l < x.length; l++) {
+            xNew[l] = x[l];
         }
-        if (n === 0) {
-            for (let l = 0; l < x.length; l++) {
-                xNew[l] = x[l];
-            }
+
+        for (; n > 0; n--) {
+            this.stepInto(h, t, xNew, xNew);
+            t += h;
         }
         return this;
     }
